@@ -803,7 +803,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 216fa6b115c3a334f8039d454d4b3ac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _virtualCamera: {fileID: 0}
+  _virtualCameraCameraThatOverides: {fileID: 541651071}
+  idCursorLocked: 1
+  smoothTime: 1
+  rotationSpeed: 10
   movementSpeed: 1
   sprintSpeed: 3
 --- !u!143 &1488170424
@@ -866,7 +869,19 @@ MonoBehaviour:
     m_ActionId: f13d485b-0ffe-4d63-bcd4-b9616ebdf5b2
     m_ActionName: PlayerGameplay/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1488170423}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: OnAim
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 004a8e58-1c7b-4913-afe6-95f4ee484610
     m_ActionName: PlayerGameplay/Aim[/Mouse/rightButton]
   - m_PersistentCalls:

@@ -15,7 +15,8 @@ public class Player : MonoBehaviour
     private Camera _camera;
     
     // Set in inspector
-    [SerializeField] private CinemachineVirtualCamera _virtualCameraCameraThatOverides;
+    [SerializeField] private CinemachineVirtualCamera virtualCameraCameraThatOverides;
+    [SerializeField] private LayerMask aimingLayerMask = new LayerMask();
     [SerializeField] private bool idCursorLocked = true;
     [SerializeField] private float smoothTime = 1;
     [SerializeField] private float rotationSpeed = 10;
@@ -31,6 +32,7 @@ public class Player : MonoBehaviour
     private float _speed;
     private Vector2 _playerVelocity;
     private Vector2 _smoothedPlayerVelocity;
+    private Vector3 _aimTarget;
 
     // Public fields
     public float movementSpeed = 1f;
@@ -100,11 +102,11 @@ public class Player : MonoBehaviour
             CasualMovement(Time.fixedDeltaTime);
             SetAnimationActiveLayer(_animator,1,0,Time.fixedDeltaTime,10);
             SetAnimationActiveLayer(_animator,2,0,Time.fixedDeltaTime,10);
-            _virtualCameraCameraThatOverides.Priority = 9;
+            virtualCameraCameraThatOverides.Priority = 9;
         }
         else
         {
-            _virtualCameraCameraThatOverides.Priority = 11;
+            virtualCameraCameraThatOverides.Priority = 11;
             SetAnimationActiveLayer(_animator,1,1,Time.fixedDeltaTime,10);
             SetAnimationActiveLayer(_animator,2,1,Time.fixedDeltaTime,10);
         }
@@ -117,6 +119,31 @@ public class Player : MonoBehaviour
         move.y = 0;
         _characterController.Move(move.normalized * (Time.fixedDeltaTime * _speed));
 
+        Vector2 myScreenCentre = new Vector2(Screen.width*.5f, Screen.height*.5f);
+        Ray ray = _camera.ScreenPointToRay(myScreenCentre);
+        if (Physics.Raycast(ray,out RaycastHit raycastHit,200,aimingLayerMask))
+        {
+            _aimTarget = raycastHit.point;
+        }
+        else
+        {
+            _aimTarget = ray.GetPoint(200);
+        }
+
+        _aimTarget.y = transform.position.y;
+        Vector3 aimDirection = (_aimTarget - transform.position).normalized;
+        if (move != Vector3.zero && !_isAiming)
+        {
+            transform.forward = move;
+            _playerVelocity.y = 0;
+            _playerVelocity.x = 0;
+        }
+        else if (_isAiming)
+        {
+            transform.forward = Vector3.Lerp(transform.forward,aimDirection,Time.fixedDeltaTime*20);
+        }
+        
+        
         transform.forward = move;
         Quaternion rotation = Quaternion.Euler(0,_camera.transform.eulerAngles.y,0);
         transform.rotation = Quaternion.Lerp(transform.rotation,rotation,Time.fixedDeltaTime * rotationSpeed);
