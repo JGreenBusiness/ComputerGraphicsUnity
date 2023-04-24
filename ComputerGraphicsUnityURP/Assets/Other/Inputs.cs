@@ -89,6 +89,15 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""e4e61613-a0bd-42b5-8262-a77a49ce0e69"",
+                    ""expectedControlType"": ""Delta"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -212,6 +221,17 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
                     ""action"": ""Grenade"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cb9f1849-c8ee-4fc3-9884-680bb2158538"",
+                    ""path"": ""<Pointer>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -227,6 +247,7 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
         m_PlayerGameplay_Sprint = m_PlayerGameplay.FindAction("Sprint", throwIfNotFound: true);
         m_PlayerGameplay_Jump = m_PlayerGameplay.FindAction("Jump", throwIfNotFound: true);
         m_PlayerGameplay_Grenade = m_PlayerGameplay.FindAction("Grenade", throwIfNotFound: true);
+        m_PlayerGameplay_Look = m_PlayerGameplay.FindAction("Look", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -293,6 +314,7 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_Sprint;
     private readonly InputAction m_PlayerGameplay_Jump;
     private readonly InputAction m_PlayerGameplay_Grenade;
+    private readonly InputAction m_PlayerGameplay_Look;
     public struct PlayerGameplayActions
     {
         private @Inputs m_Wrapper;
@@ -304,6 +326,7 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
         public InputAction @Sprint => m_Wrapper.m_PlayerGameplay_Sprint;
         public InputAction @Jump => m_Wrapper.m_PlayerGameplay_Jump;
         public InputAction @Grenade => m_Wrapper.m_PlayerGameplay_Grenade;
+        public InputAction @Look => m_Wrapper.m_PlayerGameplay_Look;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -334,6 +357,9 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
                 @Grenade.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnGrenade;
                 @Grenade.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnGrenade;
                 @Grenade.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnGrenade;
+                @Look.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnLook;
+                @Look.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnLook;
+                @Look.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnLook;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -359,6 +385,9 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
                 @Grenade.started += instance.OnGrenade;
                 @Grenade.performed += instance.OnGrenade;
                 @Grenade.canceled += instance.OnGrenade;
+                @Look.started += instance.OnLook;
+                @Look.performed += instance.OnLook;
+                @Look.canceled += instance.OnLook;
             }
         }
     }
@@ -372,5 +401,6 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
         void OnSprint(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnGrenade(InputAction.CallbackContext context);
+        void OnLook(InputAction.CallbackContext context);
     }
 }

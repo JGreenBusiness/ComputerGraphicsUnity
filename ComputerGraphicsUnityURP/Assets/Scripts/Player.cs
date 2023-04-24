@@ -64,6 +64,7 @@ public class Player : MonoBehaviour
         else
         {
             _isMoving = false;
+            
         }
     }
 
@@ -110,13 +111,14 @@ public class Player : MonoBehaviour
             SetAnimationActiveLayer(_animator,1,1,Time.fixedDeltaTime,10);
             SetAnimationActiveLayer(_animator,2,1,Time.fixedDeltaTime,10);
         }
-        
 
         _playerVelocity = Vector2.SmoothDamp(_playerVelocity,_direction,ref _smoothedPlayerVelocity,smoothTime);
         
         Vector3 move = new Vector3(_playerVelocity.x, 0, _playerVelocity.y);
+        
         move = move.x * _camera.transform.right.normalized + move.z * _camera.transform.forward.normalized;
         move.y = 0;
+        
         _characterController.Move(move.normalized * (Time.fixedDeltaTime * _speed));
 
         Vector2 myScreenCentre = new Vector2(Screen.width*.5f, Screen.height*.5f);
@@ -142,11 +144,9 @@ public class Player : MonoBehaviour
         {
             transform.forward = Vector3.Lerp(transform.forward,aimDirection,Time.fixedDeltaTime*20);
         }
-        
-        
-        transform.forward = move;
-        Quaternion rotation = Quaternion.Euler(0,_camera.transform.eulerAngles.y,0);
-        transform.rotation = Quaternion.Lerp(transform.rotation,rotation,Time.fixedDeltaTime * rotationSpeed);
+
+        //Quaternion rotation = Quaternion.Euler(0,_camera.transform.eulerAngles.y,0);
+        //transform.rotation = Quaternion.Lerp(transform.rotation,rotation,Time.fixedDeltaTime * rotationSpeed);
     }
 
     private void LateUpdate()
